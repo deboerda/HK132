@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!78 &1
+TagManager:
+  serializedVersion: 3
+  tags:
+  - Plane
+  - Plane(1)
+  - Plane(2)
+  - Plane(3)
+  - Plane(4)
+  - Plane(5)
+  - Plane(6)
+  - Plane(7)
+  - Plane(8)
+  - Plane(9)
+  - Plane(10)
+  - LINE
+  layers:
+  - Default
+  - TransparentFX
+  - Ignore Raycast
+  - 
+  - Water
+  - UI
+  - line
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  - 
+  m_SortingLayers:
+  - name: Default
+    uniqueID: 0
+    locked: 0
+  - name: ui
+    uniqueID: 3672966281
+    locked: 0
+  m_RenderingLayers:
+  - Default

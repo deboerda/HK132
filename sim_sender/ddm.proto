@@ -1,0 +1,38 @@
+syntax = "proto2";
+package pb;
+
+message DDMData {
+  required double machine_time = 1;
+  required double sim_time = 2;
+  repeated SimVar sim_vars = 3;
+  optional bool is_start_sim = 4;
+  optional bool is_stop_sim = 5;
+  repeated TmVar tm_vars = 6;
+  repeated FcVar fc_vars = 7;
+
+  message SimVar {
+    required string name = 1;
+    required Type type = 2;
+    optional double double_value = 3;
+    optional double int_value = 4;
+    optional double bool_value = 5;
+    optional string string_value = 6;
+
+    enum Type {
+      Bool = 1;
+      Int = 2;
+      Double = 3;
+      String = 4;
+    }
+  }
+
+  message TmVar {
+    required string code = 1;
+    required double value = 2;
+  }
+
+  message FcVar {
+    required string code = 1;
+    required double time = 2;
+  }
+}

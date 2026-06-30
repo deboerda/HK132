@@ -1,0 +1,35 @@
+# Normalize text files while keeping binary Unity assets untouched.
+* text=auto
+
+# Unity YAML assets and metadata
+*.meta text eol=lf
+*.unity text eol=lf merge=unityyamlmerge
+*.prefab text eol=lf merge=unityyamlmerge
+*.asset text eol=lf merge=unityyamlmerge
+*.mat text eol=lf merge=unityyamlmerge
+*.anim text eol=lf merge=unityyamlmerge
+*.controller text eol=lf merge=unityyamlmerge
+*.overrideController text eol=lf merge=unityyamlmerge
+*.playable text eol=lf merge=unityyamlmerge
+
+# Source and config
+*.cs text eol=lf
+*.shader text eol=lf
+*.hlsl text eol=lf
+*.cginc text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.py text eol=lf
+*.proto text eol=lf
+
+# Binary assets
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.psd binary
+*.tga binary
+*.fbx binary
+*.dll binary
+*.docx binary
+*.ttf binary

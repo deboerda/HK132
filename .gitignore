@@ -1,0 +1,59 @@
+# Unity generated folders
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+[Rr]ecordings/
+[Pp]rofilerCaptures/
+
+# Unity generated files
+*.csproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+sysinfo.txt
+
+# Unity crash and build artifacts
+*.stackdump
+*.apk
+*.aab
+*.unitypackage
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.DotSettings.user
+
+# OS files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Python demo local artifacts
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Archives and local packaged exports
+*.7z
+*.zip
+*.rar
+*.unitypackage.meta
+
+# Local packaged application output
+MyApp/
