@@ -378,9 +378,12 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         }
         scrollRect.horizontal = false;
         scrollRect.vertical = true;
+        scrollRect.movementType = ScrollRect.MovementType.Clamped;
+        scrollRect.scrollSensitivity = 24f;
 
         RectTransform viewport = FindOrCreateRect(template, "Viewport");
         StretchFull(viewport);
+        viewport.offsetMax = new Vector2(-scrollbarWidth - 2f, 0f);
         var viewportImage = viewport.GetComponent<Image>();
         if (viewportImage == null)
         {
@@ -452,6 +455,9 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
 
         scrollRect.viewport = viewport;
         scrollRect.content = content;
+        scrollRect.verticalScrollbar = EnsureVerticalScrollbar(template);
+        scrollRect.verticalScrollbarVisibility = ScrollRect.ScrollbarVisibility.AutoHide;
+        scrollRect.verticalScrollbarSpacing = 2f;
         return template;
     }
 
