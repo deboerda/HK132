@@ -431,6 +431,10 @@ public class PlaneInfoGrid : MonoBehaviour
             rect.anchorMin = new Vector2(0f, 1f);
             rect.anchorMax = new Vector2(1f, 1f);
             rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = new Vector2(0f, rowHeight);
+            rect.offsetMin = new Vector2(0f, rect.offsetMin.y);
+            rect.offsetMax = new Vector2(0f, rect.offsetMax.y);
         }
 
         var image = rowObject.GetComponent<Image>();
@@ -477,10 +481,10 @@ public class PlaneInfoGrid : MonoBehaviour
         {
             root = rect,
             rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, preserveExistingHeaderCells),
-            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, preserveExistingHeaderCells),
-            longitudeText = FindOrCreateCell(rowObject.transform, "Longitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
-            latitudeText = FindOrCreateCell(rowObject.transform, "Latitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
-            altitudeText = FindOrCreateCell(rowObject.transform, "Altitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
+            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 112f, preserveExistingHeaderCells),
+            longitudeText = FindOrCreateCell(rowObject.transform, "Longitude", textColor, fontSize, 86f, preserveExistingHeaderCells),
+            latitudeText = FindOrCreateCell(rowObject.transform, "Latitude", textColor, fontSize, 86f, preserveExistingHeaderCells),
+            altitudeText = FindOrCreateCell(rowObject.transform, "Altitude", textColor, fontSize, 78f, preserveExistingHeaderCells),
         };
     }
 
@@ -525,7 +529,7 @@ public class PlaneInfoGrid : MonoBehaviour
         }
         layoutElement.minWidth = width;
         layoutElement.preferredWidth = width;
-        layoutElement.flexibleWidth = name == "PlaneId" ? 1f : 0f;
+        layoutElement.flexibleWidth = 0f;
     }
 
     private void SetRowTexts(RowView row, string rank, string planeId, string longitude, string latitude, string altitude)
