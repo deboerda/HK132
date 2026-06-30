@@ -392,7 +392,7 @@ public class PlaneInfoGrid : MonoBehaviour
             Transform existing = headerRoot.Find("Header");
             if (existing != null && existing.TryGetComponent(out RectTransform existingRect))
             {
-                return BindRow(existingRect, headerBackground, headerFontSize, true);
+                return BindRow(existingRect, headerBackground, headerFontSize, true, true);
             }
         }
 
@@ -415,10 +415,10 @@ public class PlaneInfoGrid : MonoBehaviour
         var rowObject = new GameObject(rowName, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         rowObject.transform.SetParent(parentRoot != null ? parentRoot : transform, false);
 
-        return BindRow(rowObject.GetComponent<RectTransform>(), background, fontSize, header);
+        return BindRow(rowObject.GetComponent<RectTransform>(), background, fontSize, header, false);
     }
 
-    private RowView BindRow(RectTransform rect, Color background, int fontSize, bool header)
+    private RowView BindRow(RectTransform rect, Color background, int fontSize, bool header, bool preserveExistingHeaderCells)
     {
         GameObject rowObject = rect.gameObject;
 
@@ -450,35 +450,49 @@ public class PlaneInfoGrid : MonoBehaviour
         layoutElement.preferredHeight = header ? 0f : rowHeight;
 
         var horizontal = rowObject.GetComponent<HorizontalLayoutGroup>();
-        if (horizontal == null)
+        if (preserveExistingHeaderCells)
         {
-            horizontal = rowObject.AddComponent<HorizontalLayoutGroup>();
+            if (horizontal != null)
+            {
+                horizontal.enabled = false;
+            }
         }
-        horizontal.childAlignment = TextAnchor.MiddleCenter;
-        horizontal.childControlWidth = true;
-        horizontal.childControlHeight = true;
-        horizontal.childForceExpandWidth = false;
-        horizontal.childForceExpandHeight = true;
-        horizontal.spacing = columnSpacing;
-        horizontal.padding = new RectOffset(8, 8, 2, 2);
+        else
+        {
+            if (horizontal == null)
+            {
+                horizontal = rowObject.AddComponent<HorizontalLayoutGroup>();
+            }
+            horizontal.enabled = true;
+            horizontal.childAlignment = TextAnchor.MiddleCenter;
+            horizontal.childControlWidth = true;
+            horizontal.childControlHeight = true;
+            horizontal.childForceExpandWidth = false;
+            horizontal.childForceExpandHeight = true;
+            horizontal.spacing = columnSpacing;
+            horizontal.padding = new RectOffset(8, 8, 2, 2);
+        }
 
         return new RowView
         {
             root = rect,
-            rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f),
-            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f),
-            longitudeText = FindOrCreateCell(rowObject.transform, "Longitude", textColor, fontSize, 96f),
-            latitudeText = FindOrCreateCell(rowObject.transform, "Latitude", textColor, fontSize, 96f),
-            altitudeText = FindOrCreateCell(rowObject.transform, "Altitude", textColor, fontSize, 96f),
+            rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, preserveExistingHeaderCells),
+            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, preserveExistingHeaderCells),
+            longitudeText = FindOrCreateCell(rowObject.transform, "Longitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
+            latitudeText = FindOrCreateCell(rowObject.transform, "Latitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
+            altitudeText = FindOrCreateCell(rowObject.transform, "Altitude", textColor, fontSize, 96f, preserveExistingHeaderCells),
         };
     }
 
-    private Text FindOrCreateCell(Transform parent, string name, Color color, int fontSize, float width)
+    private Text FindOrCreateCell(Transform parent, string name, Color color, int fontSize, float width, bool preserveExisting)
     {
         Transform existing = parent.Find(name);
         if (existing != null && existing.TryGetComponent(out Text existingText))
         {
-            ConfigureCell(existingText, name, color, fontSize, width);
+            if (!preserveExisting)
+            {
+                ConfigureCell(existingText, name, color, fontSize, width);
+            }
             return existingText;
         }
 
