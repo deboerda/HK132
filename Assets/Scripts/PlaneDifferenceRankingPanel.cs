@@ -73,6 +73,7 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
 
         EnsureVerticalLayout(headerRoot, false);
         EnsureVerticalLayout(contentRoot, true);
+        ApplyHeaderViewportInset();
 
         if (headerRoot != null)
         {
@@ -260,6 +261,7 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
 
         headerRoot = FindOrCreateRect(panel, "HeaderRoot");
         StretchTop(headerRoot, headerHeight, selectorHeight);
+        headerRoot.offsetMax = new Vector2(-scrollbarWidth - 2f, headerRoot.offsetMax.y);
 
         RectTransform scrollRoot = FindOrCreateRect(panel, "Scroll View");
         StretchFillBelow(scrollRoot, selectorHeight + headerHeight);
@@ -526,6 +528,16 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         return scrollbar;
     }
 
+    private void ApplyHeaderViewportInset()
+    {
+        if (headerRoot == null || headerRoot == contentRoot)
+        {
+            return;
+        }
+
+        headerRoot.offsetMax = new Vector2(-scrollbarWidth - 2f, headerRoot.offsetMax.y);
+    }
+
     private static RectTransform FindOrCreateRect(RectTransform parent, string childName)
     {
         Transform existing = parent.Find(childName);
@@ -671,11 +683,11 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         return new RowView
         {
             root = rect,
-            rankText = CreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 34f, 0f),
-            idText = CreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 112f, 1f),
-            distanceText = CreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 86f, 0f),
-            altitudeText = CreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 78f, 0f),
-            headingText = CreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 86f, 0f),
+            rankText = CreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, 0f),
+            idText = CreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, 1f),
+            distanceText = CreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 96f, 0f),
+            altitudeText = CreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 96f, 0f),
+            headingText = CreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 96f, 0f),
         };
     }
 
