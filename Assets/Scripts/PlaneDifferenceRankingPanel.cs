@@ -77,7 +77,7 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
 
         if (headerRoot != null)
         {
-            headerRow = CreateRow(headerRoot, "Header", headerBackground, headerFontSize, true);
+            headerRow = FindOrCreateHeaderRow();
             SetRowTexts(headerRow, "#", "飞机编号", "距离差", "高度差", "方位角差");
         }
     }
@@ -646,12 +646,32 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         }
     }
 
+    private RowView FindOrCreateHeaderRow()
+    {
+        if (headerRoot != null)
+        {
+            Transform existing = headerRoot.Find("Header");
+            if (existing != null && existing.TryGetComponent(out RectTransform existingRect))
+            {
+                return BindRow(existingRect, headerBackground, headerFontSize, true);
+            }
+        }
+
+        return CreateRow(headerRoot, "Header", headerBackground, headerFontSize, true);
+    }
+
     private RowView CreateRow(RectTransform parentRoot, string rowName, Color background, int fontSize, bool header)
     {
         var rowObject = new GameObject(rowName, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         rowObject.transform.SetParent(parentRoot != null ? parentRoot : transform, false);
 
-        var rect = rowObject.GetComponent<RectTransform>();
+        return BindRow(rowObject.GetComponent<RectTransform>(), background, fontSize, header);
+    }
+
+    private RowView BindRow(RectTransform rect, Color background, int fontSize, bool header)
+    {
+        GameObject rowObject = rect.gameObject;
+
         if (header)
         {
             StretchFull(rect);
@@ -664,14 +684,26 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         }
 
         var image = rowObject.GetComponent<Image>();
+        if (image == null)
+        {
+            image = rowObject.AddComponent<Image>();
+        }
         image.color = background;
 
         var layoutElement = rowObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = rowObject.AddComponent<LayoutElement>();
+        }
         layoutElement.ignoreLayout = header;
         layoutElement.minHeight = header ? 0f : rowHeight;
         layoutElement.preferredHeight = header ? 0f : rowHeight;
 
         var horizontal = rowObject.GetComponent<HorizontalLayoutGroup>();
+        if (horizontal == null)
+        {
+            horizontal = rowObject.AddComponent<HorizontalLayoutGroup>();
+        }
         horizontal.childAlignment = TextAnchor.MiddleCenter;
         horizontal.childControlWidth = true;
         horizontal.childControlHeight = true;
@@ -683,12 +715,24 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         return new RowView
         {
             root = rect,
-            rankText = CreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, 0f),
-            idText = CreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, 1f),
-            distanceText = CreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 96f, 0f),
-            altitudeText = CreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 96f, 0f),
-            headingText = CreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 96f, 0f),
+            rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, 0f),
+            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, 1f),
+            distanceText = FindOrCreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 96f, 0f),
+            altitudeText = FindOrCreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 96f, 0f),
+            headingText = FindOrCreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 96f, 0f),
         };
+    }
+
+    private Text FindOrCreateCell(Transform parent, string name, Color color, int fontSize, float width, float flexibleWidth)
+    {
+        Transform existing = parent.Find(name);
+        if (existing != null && existing.TryGetComponent(out Text existingText))
+        {
+            ConfigureCell(existingText, name, color, fontSize, width, flexibleWidth);
+            return existingText;
+        }
+
+        return CreateCell(parent, name, color, fontSize, width, flexibleWidth);
     }
 
     private Text CreateCell(Transform parent, string name, Color color, int fontSize, float width, float flexibleWidth)
@@ -697,6 +741,12 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         cellObject.transform.SetParent(parent, false);
 
         var text = cellObject.GetComponent<Text>();
+        ConfigureCell(text, name, color, fontSize, width, flexibleWidth);
+        return text;
+    }
+
+    private void ConfigureCell(Text text, string name, Color color, int fontSize, float width, float flexibleWidth)
+    {
         text.font = font;
         text.fontSize = fontSize;
         text.color = color;
@@ -704,11 +754,14 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         text.verticalOverflow = VerticalWrapMode.Truncate;
 
-        var layoutElement = cellObject.GetComponent<LayoutElement>();
+        var layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
         layoutElement.minWidth = width;
         layoutElement.preferredWidth = width;
         layoutElement.flexibleWidth = flexibleWidth;
-        return text;
     }
 
     private void SetRowTexts(RowView row, string rank, string planeId, string distance, string altitude, string heading)

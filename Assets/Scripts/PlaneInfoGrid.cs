@@ -81,7 +81,7 @@ public class PlaneInfoGrid : MonoBehaviour
         EnsureLayout(contentRoot, true);
         if (showHeader)
         {
-            headerRow = CreateRow(headerRoot, "Header", headerBackground, headerFontSize, true);
+            headerRow = FindOrCreateHeaderRow();
             SetRowTexts(headerRow, "#", "飞机编号", "经度", "纬度", "高度");
         }
     }
@@ -385,6 +385,20 @@ public class PlaneInfoGrid : MonoBehaviour
         }
     }
 
+    private RowView FindOrCreateHeaderRow()
+    {
+        if (headerRoot != null)
+        {
+            Transform existing = headerRoot.Find("Header");
+            if (existing != null && existing.TryGetComponent(out RectTransform existingRect))
+            {
+                return BindRow(existingRect, headerBackground, headerFontSize, true);
+            }
+        }
+
+        return CreateRow(headerRoot, "Header", headerBackground, headerFontSize, true);
+    }
+
     private void SetActiveRowCount(int count)
     {
         for (int i = 0; i < rows.Count; i++)
@@ -401,7 +415,13 @@ public class PlaneInfoGrid : MonoBehaviour
         var rowObject = new GameObject(rowName, typeof(RectTransform), typeof(Image), typeof(HorizontalLayoutGroup), typeof(LayoutElement));
         rowObject.transform.SetParent(parentRoot != null ? parentRoot : transform, false);
 
-        var rect = rowObject.GetComponent<RectTransform>();
+        return BindRow(rowObject.GetComponent<RectTransform>(), background, fontSize, header);
+    }
+
+    private RowView BindRow(RectTransform rect, Color background, int fontSize, bool header)
+    {
+        GameObject rowObject = rect.gameObject;
+
         if (header)
         {
             StretchFull(rect);
@@ -414,14 +434,26 @@ public class PlaneInfoGrid : MonoBehaviour
         }
 
         var image = rowObject.GetComponent<Image>();
+        if (image == null)
+        {
+            image = rowObject.AddComponent<Image>();
+        }
         image.color = background;
 
         var layoutElement = rowObject.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = rowObject.AddComponent<LayoutElement>();
+        }
         layoutElement.ignoreLayout = header;
         layoutElement.minHeight = header ? 0f : rowHeight;
         layoutElement.preferredHeight = header ? 0f : rowHeight;
 
         var horizontal = rowObject.GetComponent<HorizontalLayoutGroup>();
+        if (horizontal == null)
+        {
+            horizontal = rowObject.AddComponent<HorizontalLayoutGroup>();
+        }
         horizontal.childAlignment = TextAnchor.MiddleCenter;
         horizontal.childControlWidth = true;
         horizontal.childControlHeight = true;
@@ -433,12 +465,24 @@ public class PlaneInfoGrid : MonoBehaviour
         return new RowView
         {
             root = rect,
-            rankText = CreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f),
-            idText = CreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f),
-            longitudeText = CreateCell(rowObject.transform, "Longitude", textColor, fontSize, 96f),
-            latitudeText = CreateCell(rowObject.transform, "Latitude", textColor, fontSize, 96f),
-            altitudeText = CreateCell(rowObject.transform, "Altitude", textColor, fontSize, 76f),
+            rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f),
+            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f),
+            longitudeText = FindOrCreateCell(rowObject.transform, "Longitude", textColor, fontSize, 96f),
+            latitudeText = FindOrCreateCell(rowObject.transform, "Latitude", textColor, fontSize, 96f),
+            altitudeText = FindOrCreateCell(rowObject.transform, "Altitude", textColor, fontSize, 96f),
         };
+    }
+
+    private Text FindOrCreateCell(Transform parent, string name, Color color, int fontSize, float width)
+    {
+        Transform existing = parent.Find(name);
+        if (existing != null && existing.TryGetComponent(out Text existingText))
+        {
+            ConfigureCell(existingText, name, color, fontSize, width);
+            return existingText;
+        }
+
+        return CreateCell(parent, name, color, fontSize, width);
     }
 
     private Text CreateCell(Transform parent, string name, Color color, int fontSize, float width)
@@ -447,6 +491,12 @@ public class PlaneInfoGrid : MonoBehaviour
         cellObject.transform.SetParent(parent, false);
 
         var text = cellObject.GetComponent<Text>();
+        ConfigureCell(text, name, color, fontSize, width);
+        return text;
+    }
+
+    private void ConfigureCell(Text text, string name, Color color, int fontSize, float width)
+    {
         text.font = font;
         text.fontSize = fontSize;
         text.color = color;
@@ -454,12 +504,14 @@ public class PlaneInfoGrid : MonoBehaviour
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         text.verticalOverflow = VerticalWrapMode.Truncate;
 
-        var layoutElement = cellObject.GetComponent<LayoutElement>();
+        var layoutElement = text.GetComponent<LayoutElement>();
+        if (layoutElement == null)
+        {
+            layoutElement = text.gameObject.AddComponent<LayoutElement>();
+        }
         layoutElement.minWidth = width;
         layoutElement.preferredWidth = width;
         layoutElement.flexibleWidth = name == "PlaneId" ? 1f : 0f;
-
-        return text;
     }
 
     private void SetRowTexts(RowView row, string rank, string planeId, string longitude, string latitude, string altitude)
