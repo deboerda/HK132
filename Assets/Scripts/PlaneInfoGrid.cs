@@ -39,6 +39,7 @@ public class PlaneInfoGrid : MonoBehaviour
     [SerializeField] private Font font;
     [SerializeField] private int headerFontSize = 14;
     [SerializeField] private int rowFontSize = 13;
+    [SerializeField] private Color panelBackground = new Color(0.06f, 0.08f, 0.1f, 0.7f);
     [SerializeField] private Color headerBackground = new Color(0.08f, 0.1f, 0.13f, 0.95f);
     [SerializeField] private Color oddRowBackground = new Color(0.12f, 0.14f, 0.18f, 0.82f);
     [SerializeField] private Color evenRowBackground = new Color(0.16f, 0.18f, 0.22f, 0.82f);
@@ -67,10 +68,14 @@ public class PlaneInfoGrid : MonoBehaviour
             headerRoot = contentRoot;
         }
 
+        ApplyHeaderViewportInset();
+
         if (font == null)
         {
             font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         }
+
+        EnsurePanelBackground();
 
         EnsureLayout(headerRoot, false);
         EnsureLayout(contentRoot, true);
@@ -91,6 +96,7 @@ public class PlaneInfoGrid : MonoBehaviour
 
         headerRoot = FindOrCreateRect(panel, "HeaderRoot");
         StretchTop(headerRoot, headerHeight, 0f);
+        headerRoot.offsetMax = new Vector2(-scrollbarWidth - 2f, 0f);
 
         RectTransform scrollRoot = FindOrCreateRect(panel, "Scroll View");
         StretchFillBelow(scrollRoot, headerHeight);
@@ -186,6 +192,27 @@ public class PlaneInfoGrid : MonoBehaviour
         scrollbar.value = 1f;
 
         return scrollbar;
+    }
+
+    private void EnsurePanelBackground()
+    {
+        var background = GetComponent<Image>();
+        if (background == null)
+        {
+            background = gameObject.AddComponent<Image>();
+        }
+
+        background.color = panelBackground;
+    }
+
+    private void ApplyHeaderViewportInset()
+    {
+        if (headerRoot == null || headerRoot == contentRoot)
+        {
+            return;
+        }
+
+        headerRoot.offsetMax = new Vector2(-scrollbarWidth - 2f, headerRoot.offsetMax.y);
     }
 
 #if UNITY_EDITOR
