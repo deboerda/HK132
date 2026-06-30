@@ -681,6 +681,10 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
             rect.anchorMin = new Vector2(0f, 1f);
             rect.anchorMax = new Vector2(1f, 1f);
             rect.pivot = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = Vector2.zero;
+            rect.sizeDelta = new Vector2(0f, rowHeight);
+            rect.offsetMin = new Vector2(0f, rect.offsetMin.y);
+            rect.offsetMax = new Vector2(0f, rect.offsetMax.y);
         }
 
         var image = rowObject.GetComponent<Image>();
@@ -716,10 +720,10 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         {
             root = rect,
             rankText = FindOrCreateCell(rowObject.transform, "Rank", header ? mutedTextColor : accentTextColor, fontSize, 42f, 0f),
-            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 120f, 1f),
-            distanceText = FindOrCreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 96f, 0f),
-            altitudeText = FindOrCreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 96f, 0f),
-            headingText = FindOrCreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 96f, 0f),
+            idText = FindOrCreateCell(rowObject.transform, "PlaneId", textColor, fontSize, 112f, 0f),
+            distanceText = FindOrCreateCell(rowObject.transform, "DistanceDelta", textColor, fontSize, 86f, 0f),
+            altitudeText = FindOrCreateCell(rowObject.transform, "AltitudeDelta", textColor, fontSize, 78f, 0f),
+            headingText = FindOrCreateCell(rowObject.transform, "HeadingDelta", textColor, fontSize, 86f, 0f),
         };
     }
 

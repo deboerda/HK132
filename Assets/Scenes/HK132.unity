@@ -3547,7 +3547,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 585144559}
   m_HandleRect: {fileID: 585144558}
   m_Direction: 2
-  m_Value: 1
+  m_Value: 0
   m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
@@ -3719,11 +3719,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 120
+  m_MinWidth: 112
   m_MinHeight: -1
-  m_PreferredWidth: 120
+  m_PreferredWidth: 112
   m_PreferredHeight: -1
-  m_FlexibleWidth: 1
+  m_FlexibleWidth: 0
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
 --- !u!114 &579887206
@@ -4155,9 +4155,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 96
+  m_MinWidth: 78
   m_MinHeight: -1
-  m_PreferredWidth: 96
+  m_PreferredWidth: 78
   m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
@@ -9530,9 +9530,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 96
+  m_MinWidth: 86
   m_MinHeight: -1
-  m_PreferredWidth: 96
+  m_PreferredWidth: 86
   m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
@@ -13633,9 +13633,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_IgnoreLayout: 0
-  m_MinWidth: 96
+  m_MinWidth: 86
   m_MinHeight: -1
-  m_PreferredWidth: 96
+  m_PreferredWidth: 86
   m_PreferredHeight: -1
   m_FlexibleWidth: 0
   m_FlexibleHeight: -1
