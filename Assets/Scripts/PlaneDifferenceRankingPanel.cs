@@ -360,7 +360,7 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         template.anchorMin = new Vector2(0f, 0f);
         template.anchorMax = new Vector2(1f, 0f);
         template.pivot = new Vector2(0.5f, 1f);
-        template.offsetMin = new Vector2(0f, -150f);
+        template.offsetMin = new Vector2(0f, -Mathf.Max(120f, rowHeight * 5f));
         template.offsetMax = Vector2.zero;
         template.gameObject.SetActive(false);
 
@@ -407,6 +407,7 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         vertical.childControlWidth = true;
         vertical.childForceExpandHeight = false;
         vertical.childForceExpandWidth = true;
+        vertical.spacing = 0f;
 
         var fitter = content.GetComponent<ContentSizeFitter>();
         if (fitter == null)
@@ -420,6 +421,14 @@ public class PlaneDifferenceRankingPanel : MonoBehaviour
         item.anchorMax = new Vector2(1f, 1f);
         item.pivot = new Vector2(0.5f, 1f);
         item.sizeDelta = new Vector2(0f, rowHeight);
+
+        var itemLayout = item.GetComponent<LayoutElement>();
+        if (itemLayout == null)
+        {
+            itemLayout = item.gameObject.AddComponent<LayoutElement>();
+        }
+        itemLayout.minHeight = rowHeight;
+        itemLayout.preferredHeight = rowHeight;
 
         var toggle = item.GetComponent<Toggle>();
         if (toggle == null)
